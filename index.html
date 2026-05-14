@@ -1,1 +1,271 @@
 
+import React, { useState, useEffect } from 'react';
+import { CheckCircle2, Circle, Mail, ShieldAlert, Sparkles, Activity, Trash2, Download, Upload } from 'lucide-react';
+
+// सुरुवातीचा डेटा
+const initialAccounts = [
+  { id: 1, email: "shubhamshin148@gmail.com", claude: true, gemini: true, note: "पूर्ण झाले (Done)" },
+  { id: 2, email: "shubhamshin1232@gmail.com", claude: false, gemini: true, note: "पूर्ण झाले, पण Gemini Pro ठीक आहे" },
+  { id: 3, email: "shubhamshin028@gmail.com", claude: false, gemini: false, note: "" },
+  { id: 4, email: "shubhamshinde1447@gmail.com", claude: false, gemini: false, note: "" },
+  { id: 5, email: "shubham458shinde@gmail.com", claude: false, gemini: false, note: "" },
+  { id: 6, email: "shindednyaneshwar4489@gmail.com", claude: false, gemini: false, note: "" },
+  { id: 7, email: "cybershubhuu@gmail.com", claude: false, gemini: false, note: "" },
+  { id: 8, email: "harshchatgpt1504@gmail.com", claude: false, gemini: false, note: "" },
+  { id: 9, email: "d39165642@gmail.com", claude: false, gemini: false, note: "" },
+  { id: 10, email: "shubham.shinde_25ucs@sanjivani.edu.in", claude: false, gemini: false, note: "" },
+];
+
+export default function App() {
+  const [accounts, setAccounts] = useState(() => {
+    try {
+      const savedData = localStorage.getItem("antigravity_accounts_data");
+      if (savedData) {
+        return JSON.parse(savedData);
+      }
+    } catch (error) {
+      console.error("डेटा लोड करताना त्रुटी:", error);
+    }
+    return initialAccounts;
+  });
+  
+  const [newEmail, setNewEmail] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  // LocalStorage मध्ये डेटा सेव्ह करणे
+  useEffect(() => {
+    localStorage.setItem("antigravity_accounts_data", JSON.stringify(accounts));
+  }, [accounts]);
+
+  const handleAddAccount = (e) => {
+    e.preventDefault();
+    if (!newEmail.trim()) return;
+    
+    let formattedEmail = newEmail.trim();
+    if (!formattedEmail.includes("@")) {
+      formattedEmail += "@gmail.com";
+    }
+
+    const newId = accounts.length > 0 ? Math.max(...accounts.map(a => a.id)) + 1 : 1;
+    setAccounts([...accounts, { id: newId, email: formattedEmail, claude: false, gemini: false, note: "" }]);
+    setNewEmail("");
+  };
+
+  const handleDeleteAccount = (id) => {
+    setAccounts(accounts.filter(acc => acc.id !== id));
+  };
+
+  const toggleCheck = (id, type) => {
+    setAccounts(accounts.map(acc => {
+      if (acc.id === id) {
+        const updatedAcc = { ...acc, [type]: !acc[type] };
+        if (updatedAcc.claude && updatedAcc.gemini) {
+          updatedAcc.note = "Quota full";
+        } else if (acc.note === "Quota full") {
+           updatedAcc.note = "";
+        }
+        return updatedAcc;
+      }
+      return acc;
+    }));
+  };
+
+  const updateNote = (id, newNote) => {
+    setAccounts(accounts.map(acc => {
+      if (acc.id === id) {
+        return { ...acc, note: newNote };
+      }
+      return acc;
+    }));
+  };
+
+  // डेटा डाउनलोड (Export) करण्यासाठी फंक्शन
+  const handleExport = () => {
+    const dataStr = JSON.stringify(accounts, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    const exportFileDefaultName = 'antigravity_backup.json';
+    let linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
+  // डेटा अपलोड (Import) करण्यासाठी फंक्शन
+  const handleImport = (e) => {
+    setErrorMsg("");
+    const fileReader = new FileReader();
+    if (!e.target.files[0]) return;
+    
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = e => {
+      try {
+        const importedData = JSON.parse(e.target.result);
+        if(Array.isArray(importedData)) {
+          setAccounts(importedData);
+        } else {
+          setErrorMsg("चुकीची फाईल! कृपया योग्य JSON बॅकअप फाईल निवडा.");
+          setTimeout(() => setErrorMsg(""), 3000);
+        }
+      } catch(error) {
+        setErrorMsg("फाईल वाचता आली नाही.");
+        setTimeout(() => setErrorMsg(""), 3000);
+      }
+    };
+  };
+
+  const totalChecked = accounts.reduce((acc, curr) => acc + (curr.claude ? 1 : 0) + (curr.gemini ? 1 : 0), 0);
+  const totalPossible = accounts.length * 2;
+  const progressPercentage = totalPossible === 0 ? 0 : Math.round((totalChecked / totalPossible) * 100);
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-200 p-4 md:p-8 font-sans">
+      <div className="max-w-7xl mx-auto space-y-6">
+        
+        {errorMsg && (
+          <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-xl text-center font-medium">
+            {errorMsg}
+          </div>
+        )}
+
+        {/* हेडर आणि ॲक्शन बटन्स */}
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-900 p-6 rounded-2xl shadow-2xl border border-slate-800">
+          <div>
+            <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 flex items-center gap-3">
+              <Activity className="text-blue-500" size={32} />
+              Antigravity हब
+            </h1>
+            <div className="flex flex-wrap gap-3 mt-4">
+              <button onClick={handleExport} className="bg-slate-800 hover:bg-slate-700 p-2 px-4 rounded-lg flex items-center gap-2 text-sm text-slate-300 transition-colors border border-slate-700">
+                 <Download size={16} className="text-green-400"/> बॅकअप डाउनलोड करा
+              </button>
+              <label className="cursor-pointer bg-slate-800 hover:bg-slate-700 p-2 px-4 rounded-lg flex items-center gap-2 text-sm text-slate-300 transition-colors border border-slate-700">
+                 <Upload size={16} className="text-blue-400"/> डेटा अपलोड करा
+                 <input type="file" accept=".json" onChange={handleImport} className="hidden" />
+              </label>
+            </div>
+          </div>
+          
+          {/* प्रोग्रेस बार */}
+          <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 w-full md:w-72 shadow-inner">
+            <div className="flex justify-between text-sm mb-3">
+              <span className="text-slate-400 font-medium">एकूण प्रगती</span>
+              <span className="text-blue-400 font-bold bg-blue-500/10 px-2 py-0.5 rounded-md">{progressPercentage}%</span>
+            </div>
+            <div className="w-full bg-slate-800 rounded-full h-3 overflow-hidden">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-purple-500 h-full rounded-full transition-all duration-700 ease-out relative" 
+                style={{ width: `${progressPercentage}%` }}
+              >
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* नवीन अकाउंट जोडण्याचा फॉर्म */}
+        <form onSubmit={handleAddAccount} className="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-lg flex flex-col sm:flex-row gap-3">
+          <div className="flex-1 relative">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
+            <input 
+              type="text" 
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              placeholder="नवीन ईमेल किंवा नाव टाका (उदा. rahul123)" 
+              className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+            />
+          </div>
+          <button 
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-blue-500/20 whitespace-nowrap"
+          >
+            + जोडा
+          </button>
+        </form>
+
+        {/* मुख्य कार्ड ग्रिड */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {accounts.map((account, index) => (
+            <div 
+              key={account.id} 
+              className={`bg-slate-900 rounded-2xl p-5 border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
+                account.claude && account.gemini 
+                  ? 'border-green-500/30 shadow-green-500/10' 
+                  : 'border-slate-800 hover:border-slate-700'
+              }`}
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <div className="bg-slate-800 text-slate-400 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm shrink-0">
+                    {index + 1}
+                  </div>
+                  <h3 className="font-semibold text-slate-200 truncate" title={account.email}>
+                    {account.email}
+                  </h3>
+                </div>
+                
+                <button 
+                  onClick={() => handleDeleteAccount(account.id)}
+                  className="text-slate-600 hover:text-red-500 hover:bg-red-500/10 p-1.5 rounded-lg transition-all shrink-0"
+                  title="अकाउंट डिलीट करा"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <button 
+                  onClick={() => toggleCheck(account.id, 'claude')}
+                  className={`flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all ${
+                    account.claude 
+                      ? 'bg-purple-500/10 border-purple-500/50 text-purple-400' 
+                      : 'bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700 hover:text-slate-400'
+                  }`}
+                >
+                  <Sparkles size={20} className={account.claude ? 'animate-pulse' : ''} />
+                  <span className="text-sm font-medium">Claude</span>
+                  {account.claude ? <CheckCircle2 size={16} /> : <Circle size={16} />}
+                </button>
+
+                <button 
+                  onClick={() => toggleCheck(account.id, 'gemini')}
+                  className={`flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all ${
+                    account.gemini 
+                      ? 'bg-blue-500/10 border-blue-500/50 text-blue-400' 
+                      : 'bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700 hover:text-slate-400'
+                  }`}
+                >
+                  <ShieldAlert size={20} className={account.gemini ? 'animate-pulse' : ''} />
+                  <span className="text-sm font-medium">Gemini</span>
+                  {account.gemini ? <CheckCircle2 size={16} /> : <Circle size={16} />}
+                </button>
+              </div>
+
+              <div className="relative">
+                <input
+                  type="text"
+                  value={account.note}
+                  onChange={(e) => updateNote(account.id, e.target.value)}
+                  placeholder="नोंद लिहा..."
+                  className={`w-full bg-slate-950 border rounded-lg px-4 py-2.5 text-sm focus:outline-none transition-all placeholder:text-slate-600 ${
+                    account.note === "Quota full"
+                      ? 'border-red-500/50 text-red-400 focus:border-red-500 focus:ring-1 focus:ring-red-500'
+                      : 'border-slate-800 text-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
+                  }`}
+                />
+                {account.note === "Quota full" && (
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <footer className="mt-12 pb-8 text-center text-slate-500 text-sm">
+          <p>केवळ वैयक्तिक वापरासाठी डिझाइन केलेले. ✨ (GitHub Pages Ready)</p>
+        </footer>
+      </div>
+    </div>
+  );
+}
