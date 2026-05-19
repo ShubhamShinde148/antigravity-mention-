@@ -1,404 +1,390 @@
+```html
 <!DOCTYPE html>
 <html lang="mr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Antigravity Hub</title>
-    <!-- Tailwind CSS for styling -->
+    <title>Antigravity Checklist</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* कस्टम स्क्रोलबार स्टाईल */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; color: #e2e8f0; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(51, 65, 85, 0.5); }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-200 font-sans min-h-screen p-4 md:p-8 flex flex-col">
+<body class="min-h-screen p-4 md:p-8">
 
-    <!-- लॉगिन पेज -->
-    <div id="login-view" class="m-auto w-full max-w-md bg-slate-900 p-8 rounded-3xl shadow-2xl border border-slate-800 hidden">
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/10 mb-4">
-                <i class="fa-solid fa-lock text-3xl text-blue-500"></i>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 glass-panel">
+        <div class="bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700 w-full max-w-md text-center">
+            <div class="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fa-solid fa-user-shield text-4xl text-blue-400"></i>
             </div>
-            <h2 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                Antigravity लॉगिन
-            </h2>
-            <p class="text-slate-400 mt-2 text-sm">फक्त ॲडमिनसाठी प्रवेश</p>
-        </div>
-
-        <form id="login-form" class="space-y-5">
-            <div>
-                <label class="block text-slate-400 text-sm font-medium mb-2">आयडी (ID)</label>
-                <div class="relative">
-                    <i class="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input type="text" id="username" placeholder="आयडी टाका" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all" required>
-                </div>
-            </div>
-            <div>
-                <label class="block text-slate-400 text-sm font-medium mb-2">पासवर्ड (Password)</label>
-                <div class="relative">
-                    <i class="fa-solid fa-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input type="password" id="password" placeholder="पासवर्ड टाका" class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all" required>
-                </div>
-            </div>
+            <h2 class="text-2xl font-bold text-white mb-2">Antigravity Login</h2>
+            <p class="text-slate-400 mb-6 text-sm">कंट्रोल पॅनेलमध्ये प्रवेश करण्यासाठी लॉगिन करा</p>
             
-            <div id="login-error" class="hidden bg-red-500/10 border border-red-500/50 text-red-500 text-sm p-3 rounded-xl text-center">
-                <i class="fa-solid fa-circle-exclamation mr-1"></i> चुकीचा ID किंवा पासवर्ड!
+            <div id="loginError" class="hidden mb-4 p-3 bg-red-500/20 border border-red-500/50 text-red-400 rounded-lg text-sm">
+                चुकीचा आयडी किंवा पासवर्ड!
             </div>
 
-            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/25">
-                लॉगिन करा <i class="fa-solid fa-arrow-right ml-1"></i>
-            </button>
-        </form>
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="block text-slate-400 text-sm mb-1">ID</label>
+                    <input type="text" id="loginId" placeholder="ID टाका..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors">
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-sm mb-1">Password</label>
+                    <input type="password" id="loginPass" placeholder="पासवर्ड टाका..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors">
+                </div>
+                <button onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg transition-colors mt-2">
+                    लॉगिन करा <i class="fa-solid fa-arrow-right-to-bracket ml-2"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
-    <!-- मुख्य डॅशबोर्ड (लॉगिन झाल्यावर दिसेल) -->
-    <div id="dashboard-view" class="max-w-7xl mx-auto space-y-6 w-full hidden">
+    <!-- Main Dashboard -->
+    <div id="mainDashboard" class="hidden max-w-6xl mx-auto pb-10">
         
-        <!-- Error Message Box -->
-        <div id="error-box" class="hidden bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-xl text-center font-medium transition-all">
-            <span id="error-msg"></span>
-        </div>
-
-        <!-- हेडर आणि ॲक्शन बटन्स -->
-        <header class="flex flex-col md:flex-row md:items-start justify-between gap-6 bg-slate-900 p-6 rounded-2xl shadow-2xl border border-slate-800">
-            <div class="w-full md:w-auto flex flex-col gap-4">
-                <div class="flex items-center justify-between">
-                    <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 flex items-center gap-3">
-                        <i class="fa-solid fa-chart-line text-blue-500"></i>
-                        Antigravity हब
+        <!-- Header -->
+        <header class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 glass-panel p-6 rounded-2xl shadow-lg">
+            <div>
+                <div class="flex justify-between items-start">
+                    <h1 class="text-3xl font-bold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-rocket text-blue-500"></i> Antigravity पॅनेल
                     </h1>
-                    <!-- मोबाईलसाठी लॉगआउट (फक्त छोट्या स्क्रीनवर दिसेल) -->
-                    <button onclick="logout()" class="md:hidden text-slate-400 hover:text-red-400 bg-slate-950 p-2 rounded-lg border border-slate-800 transition-colors">
-                        <i class="fa-solid fa-power-off"></i>
-                    </button>
                 </div>
-                
-                <div class="flex flex-wrap gap-3">
-                    <button onclick="exportData()" class="bg-slate-800 hover:bg-slate-700 p-2 px-4 rounded-lg flex items-center gap-2 text-sm text-slate-300 transition-colors border border-slate-700">
-                        <i class="fa-solid fa-download text-green-400"></i> बॅकअप डाउनलोड
-                    </button>
-                    <label class="cursor-pointer bg-slate-800 hover:bg-slate-700 p-2 px-4 rounded-lg flex items-center gap-2 text-sm text-slate-300 transition-colors border border-slate-700">
-                        <i class="fa-solid fa-upload text-blue-400"></i> डेटा अपलोड
-                        <input type="file" id="fileInput" accept=".json" class="hidden" />
-                    </label>
-                </div>
+                <p class="text-slate-400 mt-2">तुमचे सर्व IDs आणि AI मॉडेल्सचे स्टेटस ट्रॅक करा.</p>
             </div>
             
-            <div class="flex flex-col items-end gap-4 w-full md:w-72">
-                <!-- डेस्कटॉपसाठी लॉगआउट -->
-                <button onclick="logout()" class="hidden md:flex items-center gap-2 text-slate-400 hover:text-red-400 bg-slate-950 px-4 py-2 rounded-lg border border-slate-800 transition-colors text-sm font-medium">
-                    <i class="fa-solid fa-power-off"></i> लॉगआउट
-                </button>
-
-                <!-- प्रोग्रेस बार -->
-                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 w-full shadow-inner">
-                    <div class="flex justify-between text-sm mb-3">
-                        <span class="text-slate-400 font-medium">एकूण प्रगती</span>
-                        <span id="progress-text" class="text-blue-400 font-bold bg-blue-500/10 px-2 py-0.5 rounded-md">0%</span>
+            <div class="flex flex-col gap-3 w-full md:w-72">
+                <!-- Progress Bar -->
+                <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                    <div class="flex justify-between text-sm mb-2">
+                        <span class="text-slate-400">एकूण प्रगती</span>
+                        <span id="progressText" class="text-blue-400 font-bold">0%</span>
                     </div>
-                    <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden">
-                        <div id="progress-bar-fill" class="bg-gradient-to-r from-blue-500 to-purple-500 h-full rounded-full transition-all duration-700 ease-out relative" style="width: 0%;">
-                        </div>
+                    <div class="w-full bg-slate-800 rounded-full h-2.5">
+                        <div id="progressBar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
                     </div>
+                </div>
+                <!-- Controls -->
+                <div class="flex gap-2">
+                    <button onclick="exportData()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white text-xs py-2 rounded-lg transition-colors" title="डेटा डाउनलोड करा">
+                        <i class="fa-solid fa-download"></i> बॅकअप
+                    </button>
+                    <button onclick="document.getElementById('importFile').click()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white text-xs py-2 rounded-lg transition-colors" title="डेटा अपलोड करा">
+                        <i class="fa-solid fa-upload"></i> रिस्टोअर
+                    </button>
+                    <input type="file" id="importFile" class="hidden" accept=".json" onchange="importData(event)">
+                    <button onclick="handleLogout()" class="flex-1 bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/30 text-xs py-2 rounded-lg transition-colors" title="लॉगआउट">
+                        <i class="fa-solid fa-power-off"></i>
+                    </button>
                 </div>
             </div>
         </header>
 
-        <!-- नवीन अकाउंट जोडण्याचा फॉर्म -->
-        <form id="addForm" class="bg-slate-900 p-4 rounded-2xl border border-slate-800 shadow-lg flex flex-col sm:flex-row gap-3">
-            <div class="flex-1 relative">
-                <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                <input 
-                    type="text" 
-                    id="newEmailInput"
-                    placeholder="नवीन ईमेल किंवा नाव टाका (उदा. rahul123)" 
-                    class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-11 pr-4 py-3 text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                />
+        <!-- Add New ID Form -->
+        <div class="glass-panel p-4 md:p-6 rounded-2xl mb-8 flex flex-col md:flex-row gap-4 items-center">
+            <div class="w-full md:flex-1 relative">
+                <i class="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                <input type="text" id="newEmailInput" placeholder="नवीन आयडी किंवा ईमेल टाका..." 
+                       class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors">
             </div>
-            <button 
-                type="submit"
-                class="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg shadow-blue-500/20 whitespace-nowrap flex items-center justify-center"
-            >
-                <i class="fa-solid fa-plus mr-2"></i> जोडा
+            <button onclick="addAccount()" class="w-full md:w-auto whitespace-nowrap bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20">
+                <i class="fa-solid fa-plus"></i> जोडा
             </button>
-        </form>
-
-        <!-- मुख्य कार्ड ग्रिड -->
-        <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Cards will be injected here -->
         </div>
 
-        <footer class="mt-12 pb-8 text-center text-slate-500 text-sm">
-            <p>केवळ वैयक्तिक वापरासाठी डिझाइन केलेले. ✨ (GitHub Pages Ready)</p>
+        <!-- Cards Grid -->
+        <div id="cardsContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <!-- Cards will be generated here by JS -->
+        </div>
+
+        <footer class="mt-12 text-center text-slate-500 text-sm">
+            <p>GitHub Pages साठी डिझाइन केलेले • फक्त वैयक्तिक वापरासाठी.</p>
         </footer>
     </div>
 
     <script>
-        // सुरुवातीचा डेटा
+        // Authentication Logic
+        const IS_LOGGED_IN_KEY = 'antigravity_logged_in';
+
+        function checkAuth() {
+            const isLoggedIn = localStorage.getItem(IS_LOGGED_IN_KEY);
+            if (isLoggedIn === 'true') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainDashboard').style.display = 'block';
+                renderCards();
+                updateProgress();
+            } else {
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('mainDashboard').style.display = 'none';
+            }
+        }
+
+        function handleLogin() {
+            const id = document.getElementById('loginId').value;
+            const pass = document.getElementById('loginPass').value;
+            const errorDiv = document.getElementById('loginError');
+
+            if (id === 'admin' && pass === 'admin123') {
+                localStorage.setItem(IS_LOGGED_IN_KEY, 'true');
+                errorDiv.classList.add('hidden');
+                document.getElementById('loginId').value = '';
+                document.getElementById('loginPass').value = '';
+                checkAuth();
+            } else {
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem(IS_LOGGED_IN_KEY);
+            checkAuth();
+        }
+
+        // App Logic
+        const STORAGE_KEY = 'antigravity_accounts_v4'; // Changed version for structure update
+
+        // मूळ डेटा (KIRO ॲड करून)
         const initialAccounts = [
-            { id: 1, email: "shubhamshin148@gmail.com", claude: true, gemini: true, note: "पूर्ण झाले (Done)" },
-            { id: 2, email: "shubhamshin1232@gmail.com", claude: false, gemini: true, note: "पूर्ण झाले, पण Gemini Pro ठीक आहे" },
-            { id: 3, email: "shubhamshin028@gmail.com", claude: false, gemini: false, note: "" },
-            { id: 4, email: "shubhamshinde1447@gmail.com", claude: false, gemini: false, note: "" },
-            { id: 5, email: "shubham458shinde@gmail.com", claude: false, gemini: false, note: "" },
-            { id: 6, email: "shindednyaneshwar4489@gmail.com", claude: false, gemini: false, note: "" },
-            { id: 7, email: "cybershubhuu@gmail.com", claude: false, gemini: false, note: "" },
-            { id: 8, email: "harshchatgpt1504@gmail.com", claude: false, gemini: false, note: "" },
-            { id: 9, email: "d39165642@gmail.com", claude: false, gemini: false, note: "" },
-            { id: 10, email: "shubham.shinde_25ucs@sanjivani.edu.in", claude: false, gemini: false, note: "" },
+            { id: 1, email: "shubhamshin148", claude: true, gemini: true, kiro: false, note: "" },
+            { id: 2, email: "shubhamshin1232", claude: false, gemini: true, kiro: false, note: "Gemini Pro ठीक आहे" },
+            { id: 3, email: "shubhamshin028", claude: false, gemini: false, kiro: false, note: "" },
+            { id: 4, email: "shubhamshinde1447", claude: false, gemini: false, kiro: false, note: "" },
+            { id: 5, email: "shubham458shinde", claude: false, gemini: false, kiro: false, note: "" },
+            { id: 6, email: "shindednyaneshwar4489", claude: false, gemini: false, kiro: false, note: "" },
+            { id: 7, email: "cybershubhuu", claude: false, gemini: false, kiro: false, note: "" },
+            { id: 8, email: "harshchatgpt1504", claude: false, gemini: false, kiro: false, note: "" },
+            { id: 9, email: "d39165642@gmail.com", claude: false, gemini: false, kiro: false, note: "" },
+            { id: 10, email: "shubham.shinde_25ucs@sanjivani.edu.in", claude: false, gemini: false, kiro: false, note: "" },
         ];
 
         let accounts = [];
 
-        // ऑथेंटिकेशन चेक करणे (लॉगिन आहे की नाही)
-        function checkAuth() {
-            const isLoggedIn = localStorage.getItem("antigravity_logged_in") === "true";
-            const loginView = document.getElementById("login-view");
-            const dashboardView = document.getElementById("dashboard-view");
-
-            if (isLoggedIn) {
-                loginView.classList.add("hidden");
-                loginView.classList.remove("flex"); // remove flex if added
-                dashboardView.classList.remove("hidden");
-                initApp(); // लॉगिन असेल तरच डेटा लोड करा
+        function loadData() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                // Ensure older data gets the 'kiro' property if migrating from v3 to v4
+                let parsedData = JSON.parse(stored);
+                accounts = parsedData.map(acc => ({
+                    ...acc,
+                    kiro: acc.kiro !== undefined ? acc.kiro : false
+                }));
             } else {
-                loginView.classList.remove("hidden");
-                loginView.classList.add("flex"); // add flex for centering
-                dashboardView.classList.add("hidden");
+                accounts = [...initialAccounts];
+                saveData();
             }
         }
 
-        // लॉगिन फॉर्म सबमिट
-        document.getElementById("login-form").addEventListener("submit", function(e) {
-            e.preventDefault();
-            const u = document.getElementById("username").value;
-            const p = document.getElementById("password").value;
-            const errorMsg = document.getElementById("login-error");
-
-            // इथे आपला ID आणि Password आहे
-            if (u === "admin" && p === "admin123") {
-                localStorage.setItem("antigravity_logged_in", "true");
-                errorMsg.classList.add("hidden");
-                document.getElementById("username").value = "";
-                document.getElementById("password").value = "";
-                checkAuth(); // लॉगिन झाल्यावर डॅशबोर्ड उघडा
-            } else {
-                errorMsg.classList.remove("hidden");
-                // थोड्या वेळाने एरर घालवण्यासाठी
-                setTimeout(() => errorMsg.classList.add("hidden"), 3000);
-            }
-        });
-
-        // लॉगआउट फंक्शन
-        window.logout = function() {
-            localStorage.removeItem("antigravity_logged_in");
-            checkAuth(); // परत लॉगिन पेजवर पाठवा
-        };
-
-        // ॲप चालू झाल्यावर डेटा लोड करणे
-        function initApp() {
-            try {
-                const savedData = localStorage.getItem("antigravity_accounts_html");
-                if (savedData) {
-                    accounts = JSON.parse(savedData);
-                } else {
-                    accounts = initialAccounts;
-                }
-            } catch (e) {
-                accounts = initialAccounts;
-            }
-            renderUI();
-        }
-
-        // डेटा सेव्ह करणे आणि UI अपडेट करणे
         function saveData() {
-            localStorage.setItem("antigravity_accounts_html", JSON.stringify(accounts));
-            renderUI();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(accounts));
+            updateProgress();
         }
 
-        function showError(msg) {
-            const errorBox = document.getElementById("error-box");
-            const errorMsg = document.getElementById("error-msg");
-            errorMsg.innerText = msg;
-            errorBox.classList.remove("hidden");
-            setTimeout(() => {
-                errorBox.classList.add("hidden");
-            }, 3000);
+        function toggleCheck(id, type) {
+            accounts = accounts.map(acc => {
+                if (acc.id === id) {
+                    let updatedAcc = { ...acc, [type]: !acc[type] };
+                    
+                    // तिन्ही टिक असल्यास आपोआप "Quota full" लिहिणे
+                    if (updatedAcc.claude && updatedAcc.gemini && updatedAcc.kiro) {
+                        updatedAcc.note = "Quota full";
+                    } else if (acc.claude && acc.gemini && acc.kiro) { 
+                        // जर आधी तिन्ही टिक होते आणि आता एक काढले, तर नोट रिकामी करा (जर त्यात Quota full असेल तरच)
+                        if (updatedAcc.note === "Quota full") {
+                            updatedAcc.note = "";
+                        }
+                    }
+                    return updatedAcc;
+                }
+                return acc;
+            });
+            saveData();
+            renderCards();
         }
 
-        function renderUI() {
-            const container = document.getElementById("cards-container");
-            container.innerHTML = ""; // जुने कार्ड्स क्लिअर करणे
+        function updateNote(id, newNote) {
+            accounts = accounts.map(acc => {
+                if (acc.id === id) return { ...acc, note: newNote };
+                return acc;
+            });
+            saveData();
+            renderCards(); 
+        }
 
-            // प्रोग्रेस कॅल्क्युलेशन
-            const totalChecked = accounts.reduce((acc, curr) => acc + (curr.claude ? 1 : 0) + (curr.gemini ? 1 : 0), 0);
-            const totalPossible = accounts.length * 2;
-            const progressPercentage = totalPossible === 0 ? 0 : Math.round((totalChecked / totalPossible) * 100);
+        function addAccount() {
+            const input = document.getElementById('newEmailInput');
+            const newEmail = input.value.trim();
             
-            document.getElementById("progress-text").innerText = progressPercentage + "%";
-            document.getElementById("progress-bar-fill").style.width = progressPercentage + "%";
+            if (newEmail) {
+                const newId = accounts.length > 0 ? Math.max(...accounts.map(a => a.id)) + 1 : 1;
+                accounts.push({
+                    id: newId,
+                    email: newEmail, 
+                    claude: false,
+                    gemini: false,
+                    kiro: false, // Added kiro here
+                    note: ""
+                });
+                input.value = '';
+                saveData();
+                renderCards();
+            }
+        }
+
+        function deleteAccount(id) {
+            if(confirm("तुम्हाला नक्की हा आयडी/ईमेल डिलीट करायचा आहे का?")) {
+                accounts = accounts.filter(acc => acc.id !== id);
+                saveData();
+                renderCards();
+            }
+        }
+
+        function updateProgress() {
+            if (accounts.length === 0) {
+                document.getElementById('progressBar').style.width = '0%';
+                document.getElementById('progressText').innerText = '0%';
+                return;
+            }
+            // आता ३ ऑप्शन्स आहेत मोजण्यासाठी
+            const totalChecked = accounts.reduce((acc, curr) => 
+                acc + (curr.claude ? 1 : 0) + (curr.gemini ? 1 : 0) + (curr.kiro ? 1 : 0), 0);
+            const totalPossible = accounts.length * 3; // एकूण ३ * आयडी संख्या
+            const percentage = Math.round((totalChecked / totalPossible) * 100);
+            
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+            document.getElementById('progressText').innerText = `${percentage}%`;
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(accounts));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href",     dataStr);
+            downloadAnchorNode.setAttribute("download", "antigravity_backup.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (Array.isArray(importedData)) {
+                            // Ensure imported data has kiro property
+                            accounts = importedData.map(acc => ({
+                                ...acc,
+                                kiro: acc.kiro !== undefined ? acc.kiro : false
+                            }));
+                            saveData();
+                            renderCards();
+                            alert("डेटा यशस्वीरित्या रिस्टोअर झाला!");
+                        }
+                    } catch (err) {
+                        alert("फाईल वाचण्यात चूक झाली. योग्य फाईल निवडा.");
+                    }
+                };
+                reader.readAsText(file);
+            }
+            event.target.value = '';
+        }
+
+        function renderCards() {
+            const container = document.getElementById('cardsContainer');
+            container.innerHTML = '';
 
             accounts.forEach((account, index) => {
-                const card = document.createElement("div");
-                
-                // स्टाईल्स
-                const borderClass = (account.claude && account.gemini) ? 'border-green-500/30 shadow-green-500/10' : 'border-slate-800 hover:border-slate-700';
-                
-                const claudeBtnClass = account.claude ? 'bg-purple-500/10 border-purple-500/50 text-purple-400' : 'bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700 hover:text-slate-400';
-                const claudeIconClass = account.claude ? 'fa-solid fa-circle-check text-purple-400' : 'fa-regular fa-circle';
-                
-                const geminiBtnClass = account.gemini ? 'bg-blue-500/10 border-blue-500/50 text-blue-400' : 'bg-slate-950 border-slate-800 text-slate-500 hover:border-slate-700 hover:text-slate-400';
-                const geminiIconClass = account.gemini ? 'fa-solid fa-circle-check text-blue-400' : 'fa-regular fa-circle';
+                // तिन्ही टिक असतील तरच Quota Full माना
+                const isQuotaFull = account.claude && account.gemini && account.kiro;
+                const noteBoxClass = isQuotaFull 
+                    ? "bg-red-500/10 border-red-500/50 focus:border-red-500 text-red-200 placeholder:text-red-400/50" 
+                    : "bg-slate-900 border-slate-700 focus:border-blue-500 text-slate-300 placeholder:text-slate-600";
 
-                const inputBorderClass = account.note === "Quota full" ? 'border-red-500/50 text-red-400 focus:border-red-500' : 'border-slate-800 text-slate-300 focus:border-blue-500';
-
-                // सुरक्षित नोट व्हॅल्यू
-                const safeNote = account.note ? account.note.replace(/"/g, '&quot;') : '';
-
-                card.className = `bg-slate-900 rounded-2xl p-5 border transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${borderClass}`;
-                card.innerHTML = `
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="flex items-center gap-3 overflow-hidden">
-                            <div class="bg-slate-800 text-slate-400 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm shrink-0">
-                                ${index + 1}
-                            </div>
-                            <h3 class="font-semibold text-slate-200 truncate" title="${account.email}">
-                                ${account.email}
-                            </h3>
-                        </div>
-                        <button onclick="deleteAccount(${account.id})" class="text-slate-600 hover:text-red-500 hover:bg-red-500/10 p-1.5 rounded-lg transition-all shrink-0" title="अकाउंट डिलीट करा">
+                const cardHTML = `
+                    <div class="glass-panel rounded-2xl p-5 relative group hover:border-slate-500 transition-all shadow-xl flex flex-col h-full">
+                        
+                        <button onclick="deleteAccount(${account.id})" class="absolute top-4 right-4 text-slate-600 hover:text-red-500 transition-colors p-1" title="डिलीट करा">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
-                    </div>
 
-                    <div class="grid grid-cols-2 gap-3 mb-4">
-                        <button onclick="toggleCheck(${account.id}, 'claude')" class="flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all ${claudeBtnClass}">
-                            <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
-                            <span class="text-sm font-medium">Claude</span>
-                            <i class="${claudeIconClass}"></i>
-                        </button>
+                        <div class="flex items-start gap-3 mb-5 pr-8">
+                            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 font-bold border border-slate-700 shrink-0">
+                                ${index + 1}
+                            </div>
+                            <div class="overflow-hidden">
+                                <h3 class="text-white font-medium truncate" title="${account.email}">${account.email}</h3>
+                                <p class="text-xs text-slate-500">ID / Username</p>
+                            </div>
+                        </div>
 
-                        <button onclick="toggleCheck(${account.id}, 'gemini')" class="flex flex-col items-center justify-center gap-2 p-3 rounded-xl border transition-all ${geminiBtnClass}">
-                            <i class="fa-solid fa-shield-halved text-lg"></i>
-                            <span class="text-sm font-medium">Gemini</span>
-                            <i class="${geminiIconClass}"></i>
-                        </button>
-                    </div>
+                        <!-- 3 Buttons Grid -->
+                        <div class="grid grid-cols-3 gap-2 mb-5 flex-grow">
+                            <!-- Claude -->
+                            <button onclick="toggleCheck(${account.id}, 'claude')" class="py-2 px-1 rounded-xl border transition-all flex flex-col items-center justify-center gap-1 ${
+                                account.claude 
+                                ? 'bg-purple-500/20 border-purple-500/50 text-purple-400' 
+                                : 'bg-slate-900 border-slate-700 text-slate-500 hover:border-purple-500/30 hover:text-purple-300'
+                            }">
+                                <i class="fa-solid ${account.claude ? 'fa-circle-check text-lg' : 'fa-circle text-lg'}"></i>
+                                <span class="text-[10px] font-semibold uppercase tracking-wider">Claude</span>
+                            </button>
 
-                    <div class="relative">
-                        <input
-                            type="text"
-                            value="${safeNote}"
-                            oninput="updateNote(${account.id}, this.value)"
-                            placeholder="नोंद लिहा..."
-                            class="w-full bg-slate-950 border rounded-lg px-4 py-2.5 text-sm focus:outline-none transition-all placeholder:text-slate-600 ${inputBorderClass}"
-                        />
-                        ${account.note === "Quota full" ? `
-                        <span class="absolute right-3 top-1/2 -translate-y-1/2 flex h-2 w-2">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                        </span>
-                        ` : ''}
+                            <!-- Gemini -->
+                            <button onclick="toggleCheck(${account.id}, 'gemini')" class="py-2 px-1 rounded-xl border transition-all flex flex-col items-center justify-center gap-1 ${
+                                account.gemini 
+                                ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' 
+                                : 'bg-slate-900 border-slate-700 text-slate-500 hover:border-blue-500/30 hover:text-blue-300'
+                            }">
+                                <i class="fa-solid ${account.gemini ? 'fa-circle-check text-lg' : 'fa-circle text-lg'}"></i>
+                                <span class="text-[10px] font-semibold uppercase tracking-wider">Gemini</span>
+                            </button>
+                            
+                            <!-- KIRO -->
+                            <button onclick="toggleCheck(${account.id}, 'kiro')" class="py-2 px-1 rounded-xl border transition-all flex flex-col items-center justify-center gap-1 ${
+                                account.kiro 
+                                ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' 
+                                : 'bg-slate-900 border-slate-700 text-slate-500 hover:border-emerald-500/30 hover:text-emerald-300'
+                            }">
+                                <i class="fa-solid ${account.kiro ? 'fa-circle-check text-lg' : 'fa-circle text-lg'}"></i>
+                                <span class="text-[10px] font-semibold uppercase tracking-wider">KIRO</span>
+                            </button>
+                        </div>
+
+                        <div class="mt-auto">
+                            <input type="text" 
+                                value="${account.note}" 
+                                onchange="updateNote(${account.id}, this.value)"
+                                placeholder="नोंद / Note लिहा..."
+                                class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all ${noteBoxClass}"
+                            >
+                        </div>
                     </div>
                 `;
-                container.appendChild(card);
+                container.innerHTML += cardHTML;
             });
         }
 
-        // चेकबॉक्स टॉगल करणे
-        window.toggleCheck = function(id, type) {
-            const accIndex = accounts.findIndex(a => a.id === id);
-            if(accIndex !== -1) {
-                accounts[accIndex][type] = !accounts[accIndex][type];
-                
-                // Quota Full लॉजिक
-                if(accounts[accIndex].claude && accounts[accIndex].gemini) {
-                    accounts[accIndex].note = "Quota full";
-                } else if (accounts[accIndex].note === "Quota full") {
-                    accounts[accIndex].note = "";
-                }
-                saveData();
-            }
+        // Initialize App on load
+        window.onload = () => {
+            loadData();
+            checkAuth();
         };
 
-        // नोट अपडेट करणे
-        window.updateNote = function(id, value) {
-            const accIndex = accounts.findIndex(a => a.id === id);
-            if(accIndex !== -1) {
-                accounts[accIndex].note = value;
-                localStorage.setItem("antigravity_accounts_html", JSON.stringify(accounts));
-            }
-        };
-
-        // नवीन अकाउंट जोडणे
-        document.getElementById("addForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            const input = document.getElementById("newEmailInput");
-            let newEmail = input.value.trim();
-            if(!newEmail) return;
-
-            if (!newEmail.includes("@")) {
-                newEmail += "@gmail.com";
-            }
-
-            const newId = accounts.length > 0 ? Math.max(...accounts.map(a => a.id)) + 1 : 1;
-            accounts.push({ id: newId, email: newEmail, claude: false, gemini: false, note: "" });
-            
-            input.value = "";
-            saveData();
+        document.getElementById('newEmailInput')?.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') addAccount();
         });
-
-        // अकाउंट डिलीट करणे
-        window.deleteAccount = function(id) {
-            if(confirm("तुम्हाला हे अकाउंट खरोखर डिलीट करायचे आहे का?")) {
-                accounts = accounts.filter(a => a.id !== id);
-                saveData();
-            }
-        };
-
-        // डेटा एक्सपोर्ट (Download JSON)
-        window.exportData = function() {
-            const dataStr = JSON.stringify(accounts, null, 2);
-            const blob = new Blob([dataStr], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "antigravity_backup.json";
-            a.click();
-            URL.revokeObjectURL(url);
-        };
-
-        // डेटा इम्पोर्ट (Upload JSON)
-        document.getElementById("fileInput").addEventListener("change", function(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                try {
-                    const importedData = JSON.parse(event.target.result);
-                    if (Array.isArray(importedData)) {
-                        accounts = importedData;
-                        saveData();
-                        alert("बॅकअप यशस्वीरीत्या अपलोड झाला!");
-                    } else {
-                        showError("चुकीची फाईल! कृपया योग्य JSON फाईल निवडा.");
-                    }
-                } catch (error) {
-                    showError("फाईल वाचता आली नाही.");
-                }
-                e.target.value = ""; 
-            };
-            reader.readAsText(file);
+        
+        document.getElementById('loginPass')?.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') handleLogin();
         });
-
-        // पेज लोड झाल्यावर ऑथेंटिकेशन चेक करा (सुरुवात)
-        checkAuth();
     </script>
 </body>
 </html>
+
+
+```
